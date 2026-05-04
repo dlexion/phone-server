@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+. $HOME/boot.env
+. $HOME/gatus/.env
+sv check AdGuardHome || exit 1
+cd $GATUS_DIR
+exec env GATUS_CONFIG_PATH=config.yaml ./gatus >> $LOG_DIR/gatus.log 2>&1

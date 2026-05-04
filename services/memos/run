@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+. $HOME/boot.env
+# Wait for AdGuard DNS
+sv check AdGuardHome || exit 1
+cd $MEMOS_DIR
+exec ./memos --port $MEMOS_PORT --data $MEMOS_DATA > /dev/null 2>&1 # >> $LOG_DIR/memos.log 2>&1

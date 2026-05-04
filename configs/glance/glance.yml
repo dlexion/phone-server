@@ -1,0 +1,108 @@
+server:
+  port: 8081
+
+# Drakula theme
+theme:
+  background-color: 231 15 21
+  primary-color: 265 89 79
+  contrast-multiplier: 1.2
+  positive-color: 135 94 66
+  negative-color: 0 100 67
+
+pages:
+  - name: "Pixel Home Server"
+    columns:
+      
+      - size: small
+        widgets:
+          - type: calendar
+          - type: weather
+            location: ${LOCATION_1}
+          - type: weather
+            location: ${LOCATION_2}
+
+          - type: bookmarks
+            groups:
+              - title: "System Links"
+                links:
+                  - title: "Tailscale Admin"
+                    url: "https://login.tailscale.com/admin/machines"
+                  - title: "GitHub"
+                    url: "https://github.com"
+
+      - size: full
+        widgets:
+          - type: rss
+            collapse-after: 6
+            feeds:
+              - title: "Andrew Lock (.NET)"
+                url: "https://andrewlock.net/rss.xml"
+              - title: ".NET Ketchup"
+                url: "https://dotnetketchup.com/rss"
+
+          - type: videos
+            channels:
+              - ${YT_CHANNEL_1}
+              - ${YT_CHANNEL_2}
+
+      - size: small
+        widgets:
+          - type: monitor
+            title: "Infrastructure"
+            sites:
+              - title: "Gatus"
+                check-url: "http://127.0.0.1:8080"
+                url: "${GATUS_URL}"
+                icon: "si:checkmarx"
+                
+              - title: "AdGuard"
+                check-url: "http://127.0.0.1:3000"
+                url: "${ADGUARD_URL}"
+                icon: "si:adguard"
+                
+              - title: "Beszel Hub"
+                check-url: "http://127.0.0.1:8090"
+                url: "${BESZEL_URL}"
+                icon: "si:googlecloud"
+                
+              - title: "Memos"
+                check-url: "http://127.0.0.1:5230"
+                url: "${MEMOS_URL}"
+                icon: "si:files"
+
+          - type: twitch-channels
+            channels:
+              - ${TWITCH_CHANNEL_1}
+              - ${TWITCH_CHANNEL_2}
+              - ${TWITCH_CHANNEL_3}
+
+          - type: custom-api
+            title: Qinping
+            url: http://127.0.0.1:8085/air_data.json
+            cache: 10m
+            template: |
+              <ul class="list list-gap-10">
+                <li class="flex justify-between">
+                  <span class="color-paragraph">Temperature</span>
+                  <span class="color-highlight">{{ .JSON.String "temperature" }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="color-paragraph">Humidity</span>
+                  <span class="color-highlight">{{ .JSON.String "humidity" }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="color-paragraph">CO2</span>
+                  <span class="color-highlight">{{ .JSON.String "co2" }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="color-paragraph">PM2.5</span>
+                  <span class="color-highlight">{{ .JSON.String "pm25" }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="color-paragraph">PM10</span>
+                  <span class="color-highlight">{{ .JSON.String "pm10" }}</span>
+                </li>
+              </ul>
+              <div class="size-h6 color-paragraph text-center margin-top-15">
+                Updated: {{ .JSON.String "updated" }}
+              </div>

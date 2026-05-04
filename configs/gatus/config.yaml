@@ -1,0 +1,69 @@
+alerting:
+  telegram:
+    token: "$TELEGRAM_BOT_TOKEN"
+    id: "$TELEGRAM_CHAT_ID"
+    default-alert:
+      send-on-resolved: true
+      failure-threshold: 3
+      success-threshold: 1
+
+endpoints:
+  - name: My-AdGuard-Home
+    group: core
+    url: "http://127.0.0.1:3000"
+    interval: 10m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: telegram
+
+  - name: "SSL check $SSL_HOST_1"
+    group: ssl
+    url: "$SSL_URL_1" 
+    interval: 6h
+    client:
+      dns-resolver: "udp://127.0.0.1:53" # dns rewrite to origin server
+    conditions:
+      - "[STATUS] == 200" 
+      - "[CERTIFICATE_EXPIRATION] > 336h"
+    alerts:
+      - type: telegram
+        failure-threshold: 2
+      - type: telegram
+        failure-threshold: 10
+
+  - name: "SSL check $SSL_HOST_2"
+    group: ssl
+    url: "$SSL_URL_2" 
+    interval: 6h
+    client:
+      dns-resolver: "udp://127.0.0.1:53" # dns rewrite to origin server
+    conditions:
+      - "[STATUS] == 200" 
+      - "[CERTIFICATE_EXPIRATION] > 336h"
+    alerts:
+      - type: telegram
+        failure-threshold: 2
+      - type: telegram
+        failure-threshold: 10
+
+external-endpoints:
+  - name: "backup-memos"
+    group: "maintenance"
+    token: "$EXTERNAL_TOKEN_1"
+    heartbeat:
+      interval: 30h
+    alerts:
+      - type: telegram
+
+  - name: "backup-system"
+    group: "maintenance"
+    token: "$EXTERNAL_TOKEN_2"
+    heartbeat:
+      interval: 30h
+    alerts:
+      - type: telegram
+
+ui:
+  title: "Pixel Server Monitor"
+  header: "Service Status"

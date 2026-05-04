@@ -1,0 +1,5 @@
+#!/data/data/com.termux/files/usr/bin/sh
+. $HOME/boot.env
+# Wait for Hub to be ready
+sv check beszel || exit 1
+exec su -c "KEY=\"$BESZEL_AGENT_KEY\" HUB_URL=http://127.0.0.1:$BESZEL_PORT FILESYSTEM=/data $BESZEL_DIR/beszel-agent >> $LOG_DIR/beszel-agent.log 2>&1"
