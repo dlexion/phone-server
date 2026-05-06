@@ -1,6 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/sh
+set -a
 . "$HOME/phone-server/.secrets/boot.env"
 . "$HOME/phone-server/.secrets/gatus.env"
+set +a
+
 sv check AdGuardHome || exit 1
 
-exec env GATUS_CONFIG_PATH="$GATUS_CONFIG" "$BIN_DIR/gatus" >> $LOG_DIR/gatus.log 2>&1
+exec "$BIN_DIR/gatus" >> $LOG_DIR/gatus.log 2>&1

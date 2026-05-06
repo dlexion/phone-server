@@ -22,7 +22,8 @@ The system is managed via a centralized Git repository (`~/phone-server`) with s
 - `/configs/` - Configuration files (e.g., `*.yml`).
 - `/scripts/` - Automation and utilities (e.g., `utils.sh`, backups).
 - `/services/` - `runit` service definitions (the `run` scripts).
-- `/.env` pattern - Secrets are isolated in gitignored `.env` files. Services natively read these variables.
+- `.secrets/*.env` pattern - Secrets are isolated in gitignored `.env` files. 
+- **Env Templates:** `configs/env_templates/*.example` serve as the source of truth for variables. Changes must be validated using `scripts/validate_envs.sh`.
 - **Templating Fallback:** If a service strictly lacks native env var support, `envsubst` combined with `*.yml.template` files can be used as a workaround in the `run` script.
 - **Data Volume Pattern:** All stateful data (SQLite `*.db`, media, user files) is isolated in a dedicated external directory, completely separated from the git codebase for easy backups and SSD migration.
 
@@ -45,3 +46,4 @@ The system is managed via a centralized Git repository (`~/phone-server`) with s
 - **Early Exit Pattern:** Write linear Bash code. Avoid deep nested `if-else`. Fail fast and log accurately.
 - **Modularity:** Source `utils.sh` for repeated tasks like logging or Gatus health-check pings.
 - **Cleanup:** Adopt the `trap` command to ensure temporary files or lock files are removed if a script fails or is interrupted.
+- **Environment Variables:** Do NOT use the `export` keyword in `.env` files. Sourcing should be done using the `set -a` and `set +a` pattern inside `runit` scripts.

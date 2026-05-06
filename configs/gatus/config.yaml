@@ -10,7 +10,7 @@ alerting:
 endpoints:
   - name: My-AdGuard-Home
     group: core
-    url: "http://127.0.0.1:3000"
+    url: "$ADGUARD_URL"
     interval: 10m
     conditions:
       - "[STATUS] == 200"
@@ -50,7 +50,7 @@ endpoints:
 external-endpoints:
   - name: "backup-memos"
     group: "maintenance"
-    token: "$EXTERNAL_TOKEN_1"
+    token: "$MEMOS_TOKEN"
     heartbeat:
       interval: 30h
     alerts:
@@ -58,7 +58,7 @@ external-endpoints:
 
   - name: "backup-system"
     group: "maintenance"
-    token: "$EXTERNAL_TOKEN_2"
+    token: "$SYSTEM_TOKEN"
     heartbeat:
       interval: 30h
     alerts:
@@ -66,7 +66,7 @@ external-endpoints:
 
   - name: "qingping"
     group: "iot"
-    token: "$QINGPING_GATUS_TOKEN"
+    token: "$QINGPING_TOKEN"
     heartbeat:
       interval: 60m
     alerts:

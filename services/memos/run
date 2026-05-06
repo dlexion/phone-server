@@ -1,6 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/sh
+set -a
 . "$HOME/phone-server/.secrets/boot.env"
-# Wait for AdGuard DNS
+set +a
+
 sv check AdGuardHome || exit 1
-cd $BIN_DIR
-exec ./memos --port $MEMOS_PORT --data $MEMOS_DATA > /dev/null 2>&1 # >> $LOG_DIR/memos.log 2>&1
+
+exec "$BIN_DIR/memos" --port $MEMOS_PORT --data $DATA_DIR/memos  > /dev/null 2>&1 # >> $LOG_DIR/memos.log 2>&1

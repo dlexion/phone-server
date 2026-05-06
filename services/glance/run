@@ -1,6 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/sh
+set -a
 . "$HOME/phone-server/.secrets/boot.env"
 . "$HOME/phone-server/.secrets/glance.env"
+set +a
+
 sv check AdGuardHome || exit 1
 
-exec env SSL_CERT_FILE=$SSL_CERT "$BIN_DIR/glance" --config "$GLANCE_CONFIG" >> $LOG_DIR/glance.log 2>&1
+exec "$BIN_DIR/glance" --config "$GLANCE_CONFIG" >> $LOG_DIR/glance.log 2>&1

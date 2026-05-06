@@ -1,3 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/sh
+set -a
 . "$HOME/phone-server/.secrets/boot.env"
-exec $BIN_DIR/beszel serve --http "0.0.0.0:$BESZEL_PORT" --dir $BESZEL_DATA  >> $LOG_DIR/beszel-hub.log 2>&1
+set +a
+
+exec $BIN_DIR/beszel serve --http "0.0.0.0:$BESZEL_PORT" --dir $DATA_DIR/beszel  >> $LOG_DIR/beszel-hub.log 2>&1

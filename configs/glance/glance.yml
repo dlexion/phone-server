@@ -51,22 +51,22 @@ pages:
             title: "Infrastructure"
             sites:
               - title: "Gatus"
-                check-url: "http://127.0.0.1:8080"
+                check-url: "${GATUS_URL}"
                 url: "${GATUS_URL}"
                 icon: "si:checkmarx"
                 
               - title: "AdGuard"
-                check-url: "http://127.0.0.1:3000"
+                check-url: "${ADGUARD_URL}"
                 url: "${ADGUARD_URL}"
                 icon: "si:adguard"
                 
               - title: "Beszel Hub"
-                check-url: "http://127.0.0.1:8090"
+                check-url: "${BESZEL_URL}"
                 url: "${BESZEL_URL}"
                 icon: "si:googlecloud"
                 
               - title: "Memos"
-                check-url: "http://127.0.0.1:5230"
+                check-url: "${MEMOS_URL}"
                 url: "${MEMOS_URL}"
                 icon: "si:files"
 

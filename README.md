@@ -8,7 +8,9 @@ The server utilizes `runit` for strict process management, isolates application 
 
 ```text
 phone-server/
+├── .secrets/           # Git-ignored live environment variables
 ├── configs/            # Application configuration files (.yaml, .yml)
+│   ├── env_templates/  # Source of truth for .env structures
 │   ├── gatus/
 │   └── glance/
 ├── scripts/            # Bash utilities, automation, and IoT integrations
@@ -53,9 +55,19 @@ If deploying to a fresh Termux environment or restoring from a crash, follow the
 git clone <repository_url> $HOME/phone-server
 ```
 
-2. Restore Environment Secrets:
+2. Initialize Secrets:
 
-Ensure your config.env and boot.env files are securely restored to their respective directories (e.g., `$HOME/backups/config.env`) outside of this repository.
+Create the `.secrets` directory and copy the templates to live `.env` files. **You must edit these new files to fill in your actual secrets.**
+```bash
+mkdir -p $HOME/phone-server/.secrets
+
+for template in $HOME/phone-server/configs/env_templates/*.example; do
+    cp "$template" "$HOME/phone-server/.secrets/$(basename "${template%.example}")"
+done
+
+bash $HOME/phone-server/scripts/validate_envs.sh
+
+```
 
 3. Symlink Services (`runit`):
 
