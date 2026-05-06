@@ -1,17 +1,12 @@
 # Environment variables and secrets
 *.env
+.rclone.conf
+.secrets/
+venv/
 
 # Databases and heavy data
 *.db
 *.db-shm
 *.db-wal
 data/
-
-# Logs and temp files
 *.log
-*.tmp
-logs/
-.rclone.conf
-
-# OS generated files
-.DS_Store

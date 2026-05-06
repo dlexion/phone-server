@@ -11,7 +11,8 @@ phone-server/
 ├── configs/            # Application configuration files (.yaml, .yml)
 │   ├── gatus/
 │   └── glance/
-├── scripts/            # Bash utilities and backup automation
+├── scripts/            # Bash utilities, automation, and IoT integrations
+│   ├── qingping/       # Qingping API integration & venv
 │   ├── backup_memos.sh
 │   ├── backup_system.sh
 │   └── utils.sh
@@ -38,6 +39,7 @@ phone-server/
 - **Dashboard:** Glance
 - **System Monitoring:** Beszel (Hub & Agent)
 - **Service Health Check:** Gatus
+- **IoT Integration:** Qingping Air Monitor Scripts
 - **Backups:** Rclone + Cron + SQLite Hot Dumps
 
 ## 🚀 Deployment & Restoration
@@ -70,18 +72,7 @@ ln -s $HOME/phone-server/services/beszel/run $PREFIX/var/service/beszel/run
 ln -s $HOME/phone-server/services/beszel-agent/run $PREFIX/var/service/beszel-agent/run
 ```
 
-4. Symlink Configurations:
-```bash
-ln -s $HOME/phone-server/configs/gatus/config.yaml $HOME/gatus/config.yaml
-ln -s $HOME/phone-server/configs/glance/glance.yml $HOME/glance/glance.yml
-```
-5. Symlink Scripts:
-```bash
-ln -s $HOME/phone-server/scripts/backup_system.sh $HOME/backups/scripts/backup_system.sh
-ln -s $HOME/phone-server/scripts/backup_memos.sh $HOME/backups/scripts/backup_memos.sh
-ln -s $HOME/phone-server/scripts/utils.sh $HOME/backups/scripts/utils.sh
-```
-6. Start the Services:
+4. Start the Services:
 
 Once links are created, clear any failed service states and restart runit:
 ```bash

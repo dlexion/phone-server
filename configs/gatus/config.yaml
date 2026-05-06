@@ -64,6 +64,14 @@ external-endpoints:
     alerts:
       - type: telegram
 
+  - name: "qingping"
+    group: "iot"
+    token: "$QINGPING_GATUS_TOKEN"
+    heartbeat:
+      interval: 60m
+    alerts:
+      - type: telegram
+
 ui:
   title: "Pixel Server Monitor"
   header: "Service Status"
