@@ -1,5 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/sh
-. $HOME/boot.env
+. "$HOME/phone-server/.secrets/boot.env"
 
 # Fix permissions: change owner to the Termux user so we can read/edit it via SSHFS
 su -c "chown $(id -u):$(id -g) $HOME/AdGuardHome/AdGuardHome.yaml"

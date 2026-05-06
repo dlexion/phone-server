@@ -1,43 +1,50 @@
-#!/data/data/com.termux/files/usr/bin/sh
+#!/data/data/com.termux/files/usr/bin/bash
 
-set -u
+set -euo pipefail
 
-. $HOME/backups/config.env
-. $HOME/backups/scripts/utils.sh
+. "$HOME/phone-server/.secrets/backup.env"
+. "$HOME/phone-server/scripts/utils.sh"
 
 SERVICE="memos"
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
 DB_PATH="$HOME/data/memos/memos_prod.db"
+TEMP_DB_FILE="$TEMP_DIR/memos_temp.db"
 ARCHIVE_NAME="memos_backup.tar.gz"
+TEMP_ARCHIVE_FILE="$TEMP_DIR/$ARCHIVE_NAME"
+
+cleanup() {
+    log_info "Cleaning up temporary files..."
+    rm -f "$TEMP_DB_FILE" "$TEMP_ARCHIVE_FILE"
+}
+trap cleanup EXIT
 
 log_info "Starting database backup for: $SERVICE"
 
 mkdir -p "$TEMP_DIR"
 
 log_info "Creating SQLite hot dump..."
-sqlite3 "$DB_PATH" ".backup '$TEMP_DIR/memos_temp.db'"
+sqlite3 "$DB_PATH" ".backup '$TEMP_DB_FILE'"
 
-if [ ! -f "$TEMP_DIR/memos_temp.db" ]; then
-    log_err "Error: Dump file not created!"
+if [ ! -s "$TEMP_DB_FILE" ]; then
+    log_err "Error: Dump file not created or is empty!"
     ping_gatus "maintenance_backup-memos" "false" "SQL-Dump-Missing" "$MEMOS_BACKUP_TOKEN"
     exit 1
 fi
 
 log_info "Archiving dump..."
-tar -czf "$TEMP_DIR/$ARCHIVE_NAME" -C "$TEMP_DIR" memos_temp.db
+tar -czf "$TEMP_ARCHIVE_FILE" -C "$TEMP_DIR" "$(basename "$TEMP_DB_FILE")"
 TAR_STATUS=$?
 
 if [ $TAR_STATUS -gt 1 ]; then
     log_err "Error creating archive (code $TAR_STATUS)"
     ping_gatus "maintenance_backup-memos" "false" "Tar-failed" "$MEMOS_BACKUP_TOKEN"
-    rm -f "$TEMP_DIR/memos_temp.db" "$TEMP_DIR/$ARCHIVE_NAME"
     exit 1
 fi
 
 log_info "Uploading to rclone cloud..."
 rclone mkdir "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/current/" $RCLONE_OPTS
 
-if rclone copy "$TEMP_DIR/$ARCHIVE_NAME" "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/current/" \
+if rclone copy "$TEMP_ARCHIVE_FILE" "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/current/" \
     --backup-dir "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/archive/$TIMESTAMP/" $RCLONE_OPTS; then
     
     log_info "Backup uploaded successfully!"
@@ -47,9 +54,7 @@ if rclone copy "$TEMP_DIR/$ARCHIVE_NAME" "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/c
 else
     log_err "rclone upload failed"
     ping_gatus "maintenance_backup-memos" "false" "Rclone-failed" "$MEMOS_BACKUP_TOKEN"
+    exit 1
 fi
-
-log_info "Cleaning up temporary files..."
-rm -f "$TEMP_DIR/memos_temp.db" "$TEMP_DIR/$ARCHIVE_NAME"
 
 log_info "Script finished."

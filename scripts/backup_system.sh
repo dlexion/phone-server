@@ -1,71 +1,60 @@
-#!/data/data/com.termux/files/usr/bin/sh
+#!/data/data/com.termux/files/usr/bin/bash
 
-set -u
+set -euo pipefail
 
-. $HOME/backups/config.env
-. $HOME/backups/scripts/utils.sh
+. "$HOME/phone-server/.secrets/backup.env"
+. "$HOME/phone-server/scripts/utils.sh"
 
 SERVICE="system"
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
 ARCHIVE_NAME="system_configs.tar.gz"
+TEMP_ARCHIVE_FILE="$TEMP_DIR/$ARCHIVE_NAME"
+BACKUP_STAGING_DIR="$TEMP_DIR/system_backup_staging"
+
+cleanup() {
+    log_info "Cleaning up temporary files..."
+    rm -rf "$BACKUP_STAGING_DIR" "$TEMP_ARCHIVE_FILE"
+}
+trap cleanup EXIT
 
 log_info "Starting backup for service: $SERVICE"
 
-mkdir -p "$TEMP_DIR"
+rm -rf "$BACKUP_STAGING_DIR"
+mkdir -p "$BACKUP_STAGING_DIR"
 
-log_info "Exporting system data..."
-pkg list-installed > "$TEMP_DIR/pkg_list.txt"
-crontab -l > "$TEMP_DIR/crontab.bak"
-termux-info > "$TEMP_DIR/termux_info.txt"
+log_info "Exporting system state and configurations..."
+pkg list-installed > "$BACKUP_STAGING_DIR/pkg_list.txt"
+crontab -l > "$BACKUP_STAGING_DIR/crontab.bak"
+termux-info > "$BACKUP_STAGING_DIR/termux_info.txt"
 
-# TODO: problem with user access (captured by root user)
-su -c "cat $HOME/AdGuardHome/AdGuardHome.yaml" > "$TEMP_DIR/AdGuardHome.yaml" 2>/dev/null 
+cp -r "$HOME/.termux" "$BACKUP_STAGING_DIR/"
+cp -r "$HOME/phone-server/.secrets" "$BACKUP_STAGING_DIR/"
+# cp "$HOME/AdGuardHome/AdGuardHome.yaml" "$BACKUP_STAGING_DIR/"
 
-# TODO: simlins not saved correctly
-log_info "Creating archive $ARCHIVE_NAME..."
-tar -czf "$TEMP_DIR/$ARCHIVE_NAME" \
-    -C "$HOME" ".termux" \
-    -C "$HOME" "boot.env" \
-    -C "$HOME/backups" "config.env" \
-    -C "$HOME/backups" "scripts" \
-    -C "$HOME/gatus" "config.yaml" \
-    -C "$HOME/glance" "glance.yml" \
-    -C "$PREFIX/var" "service" \
-    -C "$TEMP_DIR" "AdGuardHome.yaml" \
-    -C "$TEMP_DIR" "pkg_list.txt" \
-    -C "$TEMP_DIR" "crontab.bak" \
-    -C "$TEMP_DIR" "termux_info.txt"
-
+log_info "Creating archive..."
+tar -czf "$TEMP_ARCHIVE_FILE" -C "$BACKUP_STAGING_DIR" .
 TAR_STATUS=$?
 
 if [ $TAR_STATUS -gt 1 ]; then
     log_err "Error creating archive (code $TAR_STATUS)"
-    ping_gatus "maintenance_backup-system" "false" "Tar-failed"
-    
-    rm -f "$TEMP_DIR/pkg_list.txt" "$TEMP_DIR/crontab.bak" "$TEMP_DIR/termux_info.txt" "$TEMP_DIR/$ARCHIVE_NAME"
+    ping_gatus "maintenance_backup-system" "false" "Tar-failed" "$SYSTEM_BACKUP_TOKEN"
     exit 1
 fi
 
 log_info "Uploading to rclone cloud..."
 rclone mkdir "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/current/" $RCLONE_OPTS
 
-if rclone copy "$TEMP_DIR/$ARCHIVE_NAME" "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/current/" \
+if rclone copy "$TEMP_ARCHIVE_FILE" "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/current/" \
     --backup-dir "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/archive/$TIMESTAMP/" $RCLONE_OPTS; then
     
     log_info "Backup uploaded successfully!"
-    ping_gatus "maintenance_backup-system" "true"
+    ping_gatus "maintenance_backup-system" "true" "" "$SYSTEM_BACKUP_TOKEN"
     
     rclone delete "$RCLONE_REMOTE:$REMOTE_ROOT/$SERVICE/archive" --min-age "${RETENTION_DAYS}d" $RCLONE_OPTS 2>/dev/null
 else
     log_err "rclone upload failed"
-    ping_gatus "maintenance_backup-system" "false" "Rclone-failed"
+    ping_gatus "maintenance_backup-system" "false" "Rclone-failed" "$SYSTEM_BACKUP_TOKEN"
+    exit 1
 fi
-
-log_info "Cleaning up temporary files..."
-rm -f "$TEMP_DIR/$ARCHIVE_NAME" \
-      "$TEMP_DIR/AdGuardHome.yaml" \
-      "$TEMP_DIR/pkg_list.txt" \
-      "$TEMP_DIR/crontab.bak" \
-      "$TEMP_DIR/termux_info.txt"
 
 log_info "Script finished."
