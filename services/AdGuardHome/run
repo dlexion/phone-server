@@ -3,10 +3,4 @@ set -a
 . "$HOME/phone-server/.secrets/boot.env"
 set +a
 
-# TODO: Fix permissions: change owner to the Termux user so we can read/edit it via SSHFS
-# su -c "chown $(id -u):$(id -g) $HOME/AdGuardHome/AdGuardHome.yaml"
-# su -c "chmod 664 $HOME/AdGuardHome/AdGuardHome.yaml"
-
-exec su -c "$ADGUARD_BIN --no-check-update >> $LOG_DIR/adguard.log 2>&1"
-# TODO: try this fix later
-#exec chpst -u root env SSL_CERT_FILE=$SSL_CERT $ADGUARD_BIN --no-check-update >> $LOG_DIR/adguard.log 2>&1
+exec su -c "$BIN_DIR/AdGuardHome -c $DATA_DIR/AdGuardHome/AdGuardHome.yaml -w $DATA_DIR/AdGuardHome/ --no-check-update >> $LOG_DIR/adguard.log 2>&1"

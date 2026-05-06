@@ -78,6 +78,7 @@ ln -s $HOME/phone-server/services/gatus/run $PREFIX/var/service/gatus/run
 ln -s $HOME/phone-server/services/glance/run $PREFIX/var/service/glance/run
 ln -s $HOME/phone-server/services/qingping/run $PREFIX/var/service/qingping/run
 ln -s $HOME/phone-server/services/AdGuardHome/run $PREFIX/var/service/AdGuardHome/run
+ln -s $HOME/phone-server/services/AdGuardHome/control $PREFIX/var/service/AdGuardHome/control
 ln -s $HOME/phone-server/services/sshd/run $PREFIX/var/service/sshd/run
 ln -s $HOME/phone-server/services/crond/run $PREFIX/var/service/crond/run
 ln -s $HOME/phone-server/services/beszel/run $PREFIX/var/service/beszel/run

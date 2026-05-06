@@ -29,7 +29,13 @@ termux-info > "$BACKUP_STAGING_DIR/termux_info.txt"
 
 cp -r "$HOME/.termux" "$BACKUP_STAGING_DIR/"
 cp -r "$HOME/phone-server/.secrets" "$BACKUP_STAGING_DIR/"
-# cp "$HOME/AdGuardHome/AdGuardHome.yaml" "$BACKUP_STAGING_DIR/"
+
+log_info "Copying AdGuard Home configuration..."
+if ! su -c "cat '$HOME/data/AdGuardHome/AdGuardHome.yaml'" > "$BACKUP_STAGING_DIR/AdGuardHome.yaml"; then
+    log_err "Failed to read AdGuard config via su!"
+    ping_gatus "maintenance_backup-system" "false" "AdGuard-Su-Failed" "$SYSTEM_BACKUP_TOKEN"
+    exit 1
+fi
 
 log_info "Creating archive..."
 tar -czf "$TEMP_ARCHIVE_FILE" -C "$BACKUP_STAGING_DIR" .
