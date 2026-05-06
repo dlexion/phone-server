@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 VENV_DIR="$SCRIPT_DIR/venv"
 PYTHON_SCRIPT="$SCRIPT_DIR/qingping.py"
 
+. "$HOME/phone-server/.secrets/boot.env"
 . "$HOME/phone-server/.secrets/qingping.env"
 . "$HOME/phone-server/scripts/utils.sh"
 
