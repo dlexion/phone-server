@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: ${GLANCE_PORT}
 
 # Drakula theme
 theme:
@@ -52,22 +52,22 @@ pages:
             sites:
               - title: "Gatus"
                 check-url: "${GATUS_URL}"
-                url: "${GATUS_URL}"
+                url: "http://gatus.pixel"
                 icon: "si:checkmarx"
                 
               - title: "AdGuard"
                 check-url: "${ADGUARD_URL}"
-                url: "${ADGUARD_URL}"
+                url: "http://adguard.pixel"
                 icon: "si:adguard"
                 
               - title: "Beszel Hub"
                 check-url: "${BESZEL_URL}"
-                url: "${BESZEL_URL}"
+                url: "http://beszel.pixel"
                 icon: "si:googlecloud"
                 
               - title: "Memos"
                 check-url: "${MEMOS_URL}"
-                url: "${MEMOS_URL}"
+                url: "http://memos.pixel"
                 icon: "si:files"
 
           - type: twitch-channels
@@ -78,7 +78,7 @@ pages:
 
           - type: custom-api
             title: Qinping
-            url: http://127.0.0.1:8085/air_data.json
+            url: http://sensors.pixel/air_data.json
             cache: 10m
             template: |
               <ul class="list list-gap-10">

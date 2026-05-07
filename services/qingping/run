@@ -1,5 +1,0 @@
-#!/data/data/com.termux/files/usr/bin/sh
-. "$HOME/phone-server/.secrets/boot.env"
-cd $QINGPING_DIR/public
-# TODO: Replace with Caddy later
-#exec python -m http.server $QINGPING_PORT --bind 127.0.0.1 > /dev/null 2>&1 # >> $LOG_DIR/qingping-server.log 2>&1

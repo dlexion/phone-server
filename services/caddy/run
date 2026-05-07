@@ -1,0 +1,8 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+set -a
+. "$HOME/phone-server/.secrets/boot.env"
+. "$HOME/phone-server/.secrets/caddy.env"
+set +a
+
+exec su -c "XDG_DATA_HOME=\"$DATA_DIR\" XDG_CONFIG_HOME=\"$DATA_DIR\" \"$BIN_DIR/caddy\" run --config \"$CADDYFILE\" >> "$LOG_DIR/caddy.log" 2>&1"

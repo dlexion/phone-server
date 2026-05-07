@@ -48,8 +48,6 @@ phone-server/
 
 If deploying to a fresh Termux environment or restoring from a crash, follow these steps to link the repository to the system.
 
-> ⚠️ **IMPORTANT:** All symbolic links (`ln -s`) must be created from inside the Termux shell (e.g. ssh).
-
 1. Clone the repository:
 ```bash
 git clone <repository_url> $HOME/phone-server
@@ -72,6 +70,7 @@ bash $HOME/phone-server/scripts/validate_envs.sh
 3. Symlink Services (`runit`):
 
 Create absolute symbolic links from the repository to the Termux `$PREFIX/var/service` directory:
+> ⚠️ **IMPORTANT:** All scripts must be executable `chmod +x your_script.sh`.
 ```bash
 ln -s $HOME/phone-server/services/memos/run $PREFIX/var/service/memos/run
 ln -s $HOME/phone-server/services/gatus/run $PREFIX/var/service/gatus/run
@@ -83,6 +82,8 @@ ln -s $HOME/phone-server/services/sshd/run $PREFIX/var/service/sshd/run
 ln -s $HOME/phone-server/services/crond/run $PREFIX/var/service/crond/run
 ln -s $HOME/phone-server/services/beszel/run $PREFIX/var/service/beszel/run
 ln -s $HOME/phone-server/services/beszel-agent/run $PREFIX/var/service/beszel-agent/run
+ln -s $HOME/phone-server/services/caddy/run $PREFIX/var/service/caddy/run
+ln -s $HOME/phone-server/services/caddy/control $PREFIX/var/service/caddy/control
 ```
 
 4. Start the Services:
