@@ -28,13 +28,19 @@ http://beszel.pixel {
     reverse_proxy 127.0.0.1:{$BESZEL_PORT}
 }
 
-http://sensors.pixel {
+http://sensors.pixel, https://sensors.pixel {
     import common
+    tls internal
     header Access-Control-Allow-Origin "*"
     header Access-Control-Allow-Methods "GET, OPTIONS"
     
     redir / /air_data.json
     
+    handle /favicon.ico {
+        header Content-Type "image/svg+xml"
+        respond `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="80">🍃</text></svg>`
+    }
+
     root * {$DATA_DIR}/qingping/public
     file_server
 }
