@@ -7,8 +7,10 @@ import base64
 from dotenv import load_dotenv
 
 HOME_DIR = os.getenv("HOME", "/data/data/com.termux/files/home")
-SECRETS_FILE = os.path.join(HOME_DIR, "phone-server", ".secrets", "qingping.env")
-load_dotenv(SECRETS_FILE)
+BOOT_SECRETS_FILE = os.path.join(HOME_DIR, "phone-server", ".secrets", "boot.env")
+SERVICE_SECRETS_FILE = os.path.join(HOME_DIR, "phone-server", ".secrets", "qingping.env")
+load_dotenv(BOOT_SECRETS_FILE)
+load_dotenv(SERVICE_SECRETS_FILE)
 
 CLIENT_ID = os.getenv("QINGPING_CLIENT_ID")
 CLIENT_SECRET = os.getenv("QINGPING_CLIENT_SECRET")
@@ -16,7 +18,7 @@ CLIENT_SECRET = os.getenv("QINGPING_CLIENT_SECRET")
 TOKEN_URL = "https://oauth.cleargrass.com/oauth2/token"
 DATA_URL = "https://apis.cleargrass.com/v1/apis/devices"
 
-DATA_DIR = os.path.join(HOME_DIR, "data", "qingping")
+DATA_DIR = os.path.join(os.path.expandvars(os.getenv("DATA_DIR", HOME_DIR)), "qingping")
 PUBLIC_DIR = os.path.join(DATA_DIR, "public")
 os.makedirs(PUBLIC_DIR, exist_ok=True)
 

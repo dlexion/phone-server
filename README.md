@@ -67,28 +67,9 @@ bash $HOME/phone-server/scripts/validate_envs.sh
 
 ```
 
-3. Symlink Services (`runit`):
-
-Create absolute symbolic links from the repository to the Termux `$PREFIX/var/service` directory:
+3. Start the Services:
 > ⚠️ **IMPORTANT:** All scripts must be executable `chmod +x your_script.sh`.
-```bash
-ln -s $HOME/phone-server/services/memos/run $PREFIX/var/service/memos/run
-ln -s $HOME/phone-server/services/gatus/run $PREFIX/var/service/gatus/run
-ln -s $HOME/phone-server/services/glance/run $PREFIX/var/service/glance/run
-ln -s $HOME/phone-server/services/qingping/run $PREFIX/var/service/qingping/run
-ln -s $HOME/phone-server/services/AdGuardHome/run $PREFIX/var/service/AdGuardHome/run
-ln -s $HOME/phone-server/services/AdGuardHome/control $PREFIX/var/service/AdGuardHome/control
-ln -s $HOME/phone-server/services/sshd/run $PREFIX/var/service/sshd/run
-ln -s $HOME/phone-server/services/crond/run $PREFIX/var/service/crond/run
-ln -s $HOME/phone-server/services/beszel/run $PREFIX/var/service/beszel/run
-ln -s $HOME/phone-server/services/beszel-agent/run $PREFIX/var/service/beszel-agent/run
-ln -s $HOME/phone-server/services/caddy/run $PREFIX/var/service/caddy/run
-ln -s $HOME/phone-server/services/caddy/control $PREFIX/var/service/caddy/control
-```
 
-4. Start the Services:
-
-Once links are created, clear any failed service states and restart runit:
 ```bash
-sv up $PREFIX/var/service/*
+runsvdir ~/phone-server/services
 ```

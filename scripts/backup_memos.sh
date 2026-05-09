@@ -2,12 +2,13 @@
 
 set -euo pipefail
 
+. "$HOME/phone-server/.secrets/boot.env"
 . "$HOME/phone-server/.secrets/backup.env"
 . "$HOME/phone-server/scripts/utils.sh"
 
 SERVICE="memos"
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
-DB_PATH="$HOME/data/memos/memos_prod.db"
+DB_PATH="$DATA_DIR/memos/memos_prod.db"
 TEMP_DB_FILE="$TEMP_DIR/memos_temp.db"
 ARCHIVE_NAME="memos_backup.tar.gz"
 TEMP_ARCHIVE_FILE="$TEMP_DIR/$ARCHIVE_NAME"

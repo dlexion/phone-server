@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+. "$HOME/phone-server/.secrets/boot.env"
 . "$HOME/phone-server/.secrets/backup.env"
 . "$HOME/phone-server/scripts/utils.sh"
 
@@ -31,7 +32,7 @@ cp -r "$HOME/.termux" "$BACKUP_STAGING_DIR/"
 cp -r "$HOME/phone-server/.secrets" "$BACKUP_STAGING_DIR/"
 
 log_info "Copying AdGuard Home configuration..."
-if ! su -c "cat '$HOME/data/AdGuardHome/AdGuardHome.yaml'" > "$BACKUP_STAGING_DIR/AdGuardHome.yaml"; then
+if ! su -c "cat '$DATA_DIR/AdGuardHome/AdGuardHome.yaml'" > "$BACKUP_STAGING_DIR/AdGuardHome.yaml"; then
     log_err "Failed to read AdGuard config via su!"
     ping_gatus "maintenance_backup-system" "false" "AdGuard-Su-Failed" "$SYSTEM_BACKUP_TOKEN"
     exit 1

@@ -4,6 +4,6 @@ set -a
 . "$HOME/phone-server/.secrets/glance.env"
 set +a
 
-sv check AdGuardHome || exit 1
+sv check $HOME/phone-server/services/adguard || exit 1
 
 exec "$BIN_DIR/glance" --config "$GLANCE_CONFIG" >> $LOG_DIR/glance.log 2>&1

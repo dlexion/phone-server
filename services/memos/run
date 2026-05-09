@@ -3,6 +3,6 @@ set -a
 . "$HOME/phone-server/.secrets/boot.env"
 set +a
 
-sv check AdGuardHome || exit 1
+sv check $HOME/phone-server/services/adguard || exit 1
 
-exec "$BIN_DIR/memos" --port $MEMOS_PORT --data $DATA_DIR/memos  > /dev/null 2>&1 # >> $LOG_DIR/memos.log 2>&1
+exec "$BIN_DIR/memos" --port $MEMOS_PORT --data $DATA_DIR/memos  >> $LOG_DIR/memos.log 2>&1
