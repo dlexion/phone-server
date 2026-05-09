@@ -1,0 +1,7 @@
+#!/data/data/com.termux/files/usr/bin/sh
+set -a
+. "$HOME/phone-server/.secrets/boot.env"
+. "$HOME/phone-server/.secrets/filebrowser.env"
+set +a
+
+exec "$BIN_DIR/filebrowser" -d "$DATA_DIR/filebrowser/$DATABASE_FILENAME" --address "127.0.0.1" --port "$FILEBROWSER_PORT" >> $LOG_DIR/filebrowser.log 2>&1

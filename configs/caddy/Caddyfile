@@ -28,6 +28,11 @@ http://beszel.pixel {
     reverse_proxy 127.0.0.1:{$BESZEL_PORT}
 }
 
+http://files.pixel {
+    import common
+    reverse_proxy 127.0.0.1:{$FILEBROWSER_PORT:8085}
+}
+
 http://sensors.pixel, https://sensors.pixel {
     import common
     tls internal
