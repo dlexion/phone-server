@@ -1,0 +1,7 @@
+#!/data/data/com.termux/files/usr/bin/sh
+set -a
+. "$HOME/phone-server/.secrets/boot.env"
+. "$HOME/phone-server/.secrets/webdav.env"
+set +a
+
+exec rclone serve webdav "$HOME/server-data/files" --addr "127.0.0.1:$WEBDAV_PORT" --user "${WEBDAV_USER}" --pass "${WEBDAV_PASS}" >> $LOG_DIR/webdav.log 2>&1

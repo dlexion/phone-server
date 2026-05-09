@@ -34,10 +34,10 @@ The system is managed via a centralized Git repository (`~/phone-server`) with s
 - **Notes:** Memos
 - **Uptime & Health:** Gatus
 - **Custom Scripts:** Qingping Air Monitor (Python script fetching cloud data to `air_data.json`).
+- **Reverse Proxy:** Caddy (Handling internal domain routing and static files).
+- **Storage:** External SSD + FileBrowser + rclone WebDAV.
 
 ## 5. Planned / Upcoming Additions
-- **Reverse Proxy:** Caddy (To replace Python `http.server` for static files and handle internal domain routing).
-- **Storage:** External SSD + FileBrowser + rclone WebDAV.
 - **Seedbox:** qBittorrent-nox (Strictly optimized for mobile CPU/RAM).
 
 ## 6. Development & Coding Guidelines

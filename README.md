@@ -10,6 +10,7 @@ The server utilizes `runit` for strict process management, isolates application 
 phone-server/
 ├── .secrets/           # Git-ignored live environment variables
 ├── configs/            # Application configuration files (.yaml, .yml)
+│   ├── caddy/
 │   ├── env_templates/  # Source of truth for .env structures
 │   ├── gatus/
 │   └── glance/
@@ -19,15 +20,16 @@ phone-server/
 │   ├── backup_system.sh
 │   └── utils.sh
 ├── services/           # Runit service daemon files
-│   ├── AdGuardHome/
+│   ├── adguard/
 │   ├── beszel/
 │   ├── beszel-agent/
-│   ├── crond/
+│   ├── caddy/
+│   ├── filebrowser/
 │   ├── gatus/
 │   ├── glance/
 │   ├── memos/
 │   ├── qingping/
-│   └── sshd/
+│   └── rclone-webdav/
 ├── .gitignore
 └── README.md
 ```
@@ -43,6 +45,8 @@ phone-server/
 - **Service Health Check:** Gatus
 - **IoT Integration:** Qingping Air Monitor Scripts
 - **Backups:** Rclone + Cron + SQLite Hot Dumps
+- **Reverse Proxy:** Caddy
+- **Storage:** FileBrowser & rclone WebDAV
 
 ## 🚀 Deployment & Restoration
 

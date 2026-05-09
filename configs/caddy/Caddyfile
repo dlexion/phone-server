@@ -30,7 +30,12 @@ http://beszel.pixel {
 
 http://files.pixel {
     import common
-    reverse_proxy 127.0.0.1:{$FILEBROWSER_PORT:8085}
+    reverse_proxy 127.0.0.1:{$FILEBROWSER_PORT}
+}
+
+http://webdav.pixel {
+    import common
+    reverse_proxy 127.0.0.1:{$WEBDAV_PORT}
 }
 
 http://sensors.pixel, https://sensors.pixel {
