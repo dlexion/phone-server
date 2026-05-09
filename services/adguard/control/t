@@ -1,3 +1,4 @@
 #!/data/data/com.termux/files/usr/bin/sh
 # Android 'su' drops SIGTERM. This runit control script explicitly kills the orphaned root process.
-su -c 'pids=$(pgrep -x AdGuardHome); if [ -n "$pids" ]; then kill $pids; fi'
+# su -c 'pids=$(pgrep -x AdGuardHome); if [ -n "$pids" ]; then kill $pids; fi'
+su -c 'pkill -SIGTERM -x AdGuardHome || true'
