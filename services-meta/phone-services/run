@@ -1,0 +1,12 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# Runit service: phone-services
+#
+# Supervised by the system runsvdir ($PREFIX/var/service).
+# Runs a nested runsvdir that supervises all ~/phone-server/services/*.
+#
+# Activate with:
+#   ln -sf ~/phone-server/services-meta/phone-services $PREFIX/var/service/phone-services
+#
+# If this runsvdir is OOM-killed or crashes, the system runit restarts it
+# automatically, bringing all phone-server services back within seconds.
+exec runsvdir /data/data/com.termux/files/home/phone-server/services

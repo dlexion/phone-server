@@ -1,0 +1,2 @@
+# runit creates this directory at runtime — do not commit it
+supervise/
