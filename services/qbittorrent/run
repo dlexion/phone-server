@@ -1,0 +1,14 @@
+#!/data/data/com.termux/files/usr/bin/sh
+set -a
+. "$HOME/phone-server/.secrets/boot.env"
+set +a
+
+QBIT_PROFILE_DIR="$DATA_DIR/qbittorrent"
+DOWNLOAD_DIR="$FILES_DIR/downloads"
+
+mkdir -p "$QBIT_PROFILE_DIR"
+mkdir -p "$DOWNLOAD_DIR"
+
+exec qbittorrent-nox \
+    --profile="$QBIT_PROFILE_DIR" \
+    --webui-port="$QBITTORRENT_PORT"

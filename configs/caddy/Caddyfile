@@ -38,6 +38,11 @@ http://webdav.pixel {
     reverse_proxy 127.0.0.1:{$WEBDAV_PORT}
 }
 
+http://qbit.pixel {
+    import common
+    reverse_proxy 127.0.0.1:{$QBITTORRENT_PORT}
+}
+
 http://sensors.pixel, https://sensors.pixel {
     import common
     tls internal
