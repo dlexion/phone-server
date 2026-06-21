@@ -1,0 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# Kill any orphan qbittorrent-nox process.
+pkill -x qbittorrent-nox 2>/dev/null || true

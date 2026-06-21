@@ -1,0 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# Kill any orphan memos process holding port 5230.
+pkill -x memos 2>/dev/null || true

@@ -1,0 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# Kill any orphan filebrowser process.
+pkill -x filebrowser 2>/dev/null || true

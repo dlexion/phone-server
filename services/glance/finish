@@ -1,0 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# Kill any orphan glance process holding port 8081.
+pkill -x glance 2>/dev/null || true

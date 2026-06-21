@@ -57,8 +57,8 @@ termux:boot → scripts/boot-init.sh → exec runsvdir $PREFIX/var/service
 ```
 
 - **`$PREFIX/var/service/phone-services`** is a symlink to `services-meta/phone-services`. It must be created on fresh setup: `ln -sf ~/phone-server/services-meta/phone-services $PREFIX/var/service/phone-services`
-- **AdGuard caveat:** runs as root via `su -c`. Its `services/adguard/finish` script ensures the root process is killed when the service stops, preventing `sessions.db` lock conflicts on restart.
-- **Recovery:** If services enter a crash loop after an OOM event, run `bash ~/phone-server/scripts/recover-services.sh`. This kills any init-adopted orphan processes holding ports.
+- **Finish scripts:** Every service has a `finish` script (`services/<name>/finish`) that kills any lingering process before the next supervised start. This prevents `bind: address already in use` crash-loops that occur when a service process is adopted by init (PPid=1) after an OOM/runsvdir restart and keeps holding its port. Direct Termux-user services use `pkill -x <binary>`; `su -c` wrapped services (adguard, beszel-agent, caddy) use `su -c 'pkill -x <binary>'`.
+- **Recovery:** If services still crash-loop after an OOM event (e.g. before finish scripts existed), run `bash ~/phone-server/scripts/recover-services.sh`. This reactively kills init-adopted orphan processes holding ports.
 
 ## 7. Development & Coding Guidelines
 - **Language:** ALL code, scripts, comments, and logs MUST be in English.
@@ -67,4 +67,4 @@ termux:boot → scripts/boot-init.sh → exec runsvdir $PREFIX/var/service
 - **Modularity:** Source `utils.sh` for repeated tasks like logging or Gatus health-check pings.
 - **Cleanup:** Adopt the `trap` command to ensure temporary files or lock files are removed if a script fails or is interrupted.
 - **Environment Variables:** Do NOT use the `export` keyword in `.env` files. Sourcing should be done using the `set -a` and `set +a` pattern inside `runit` scripts.
-- **Runit `finish` scripts:** Any service that spawns a child with a different UID (e.g., via `su -c`) MUST have a `finish` script that kills that child, otherwise it will survive as an orphan and hold ports on restart.
+- **Runit `finish` scripts:** Every service that binds a port MUST have a `finish` script. When Android's OOM killer or a crash kills `runsvdir`, the service process is re-parented to init (PPid=1) and survives as an orphan, blocking the port for the next supervised start. The `finish` script is called by runsv on every exit and must kill any such orphan. For `su -c` wrapped services, the root child must be killed via `su -c 'pkill -x <binary>'`.
