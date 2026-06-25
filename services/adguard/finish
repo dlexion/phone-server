@@ -3,7 +3,8 @@
 # Called by runsv every time the run script exits (crash, sv stop, sv restart).
 #
 # AdGuardHome runs as root via "su -c", so SIGTERM sent by runsv to the su
-# wrapper process may not propagate to the root child. This script ensures
-# any lingering root AdGuardHome process is killed before the next start,
-# preventing the sessions.db lock timeout on restart.
+# wrapper process may not propagate to the root child. Kill explicitly, then
+# sleep briefly so the sessions.db file lock is fully released before the
+# next start attempt.
 su -c 'pkill -x AdGuardHome 2>/dev/null; true'
+sleep 2

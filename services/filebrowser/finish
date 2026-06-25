@@ -1,3 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/sh
-# Kill any orphan filebrowser process.
-pkill -x filebrowser 2>/dev/null || true
+# Kill any orphan filebrowser process before the next supervised start.
+# SIGKILL (-9) is used to guarantee immediate termination; SIGTERM may
+# leave the process alive long enough for the next run to fail on bind.
+pkill -9 -x filebrowser 2>/dev/null || true

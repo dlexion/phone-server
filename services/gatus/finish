@@ -1,3 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/sh
-# Kill any orphan gatus process holding port 8080.
-pkill -x gatus 2>/dev/null || true
+# Kill any orphan gatus process before the next supervised start.
+# SIGKILL (-9) is used to guarantee immediate termination; SIGTERM may
+# leave the process alive long enough for the next run to fail on bind.
+pkill -9 -x gatus 2>/dev/null || true
