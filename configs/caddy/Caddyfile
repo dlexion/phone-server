@@ -43,6 +43,11 @@ http://qbit.pixel {
     reverse_proxy 127.0.0.1:{$QBITTORRENT_PORT}
 }
 
+http://audiobooks.pixel {
+    import common
+    reverse_proxy 127.0.0.1:{$AUDIOBOOKSHELF_PORT}
+}
+
 http://sensors.pixel, https://sensors.pixel {
     import common
     tls internal

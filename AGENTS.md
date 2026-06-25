@@ -36,6 +36,7 @@ The system is managed via a centralized Git repository (`~/phone-server`) with s
 - **Notes:** Memos
 - **Uptime & Health:** Gatus
 - **Seedbox:** qBittorrent-nox (optimized for mobile CPU/RAM).
+- **Audiobooks:** Audiobookshelf (Node.js inside Debian proot-distro — avoids android_ndk_path glibc issue; ABS cloned at /root/audiobookshelf inside Debian; server-data bind-mounted at /server-data; books library path inside ABS UI: /server-data/files/audiobooks; update via scripts/update-audiobookshelf.sh; client Nuxt 2 static files built to client/dist/ via install script — required for the UI to load).
 - **Custom Scripts:** Qingping Air Monitor (Python script fetching cloud data to `air_data.json`).
 - **Reverse Proxy:** Caddy (Handling internal domain routing and static files).
 - **Storage:** External SSD + FileBrowser + rclone WebDAV.

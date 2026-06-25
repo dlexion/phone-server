@@ -47,6 +47,13 @@ endpoints:
       - type: telegram
         failure-threshold: 10
 
+  - name: audiobookshelf
+    group: services
+    url: "http://127.0.0.1:13378/healthcheck"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
 external-endpoints:
   - name: "backup-memos"
     group: "maintenance"
