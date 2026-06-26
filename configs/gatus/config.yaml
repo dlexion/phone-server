@@ -50,7 +50,42 @@ endpoints:
   - name: audiobookshelf
     group: services
     url: "http://127.0.0.1:13378/healthcheck"
-    interval: 1m
+    interval: 10m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: glance
+    group: services
+    url: "http://127.0.0.1:8081"
+    interval: 10m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: memos
+    group: services
+    url: "http://127.0.0.1:5230"
+    interval: 10m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: beszel
+    group: services
+    url: "http://127.0.0.1:8090"
+    interval: 10m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: filebrowser
+    group: services
+    url: "http://127.0.0.1:8085"
+    interval: 10m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: qbittorrent
+    group: services
+    url: "http://127.0.0.1:8087"
+    interval: 10m
     conditions:
       - "[STATUS] == 200"
 

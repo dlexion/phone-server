@@ -16,8 +16,9 @@ phone-server/
 │   └── glance/
 ├── scripts/            # Bash utilities, automation, and IoT integrations
 │   ├── qingping/       # Qingping API integration & venv
-│   ├── boot-init.sh    # Source of truth for termux:boot startup script
-│   ├── recover-services.sh  # Kills orphan processes after OOM crash
+│   ├── boot-init.sh    # Source of truth for termux:boot startup script (activates swapfile)
+│   ├── kill-orphans.sh # Proactively kills orphaned ports on runsvdir restart
+│   ├── recover-services.sh  # Manual fallback for orphan process cleanup
 │   ├── backup_memos.sh
 │   ├── backup_system.sh
 │   └── utils.sh
@@ -46,7 +47,7 @@ phone-server/
 - **Notes:** Memos
 - **Dashboard:** Glance
 - **System Monitoring:** Beszel (Hub & Agent)
-- **Service Health Check:** Gatus
+- **Service Health Check:** Gatus (Monitors health of all active services)
 - **Seedbox:** qBittorrent-nox
 - **IoT Integration:** Qingping Air Monitor Scripts
 - **Backups:** Rclone + Cron + SQLite Hot Dumps
@@ -97,7 +98,9 @@ bash ~/.termux/boot/00-system-init.sh
 
 ## 🔧 Recovery
 
-If services show `runsv not running` or are stuck crash-looping after an OOM event:
+**Note on OOM Kills:** The system is configured with a massive SSD swapfile to prevent Android's OOM killer from terminating services. If an OOM event does occur, the `phone-services` supervisor automatically runs `kill-orphans.sh` on restart to gracefully clear out orphaned ports.
+
+If services show `runsv not running` or you need to manually force an orphan cleanup:
 ```bash
 bash ~/phone-server/scripts/recover-services.sh
 ```

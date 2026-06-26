@@ -51,6 +51,14 @@ fi
 
 echo "[SUCCESS] SSD mounted and ready."
 
+# --- Activate Swapfile ---
+echo "[INFO] Activating SSD swapfile..."
+if su -c "test -f '$MOUNT_POINT/swapfile'"; then
+    su -c "swapon '$MOUNT_POINT/swapfile'" || echo "[WARN] Failed to activate swapfile."
+else
+    echo "[WARN] Swapfile not found at $MOUNT_POINT/swapfile."
+fi
+
 # --- Ensure var/service symlink for phone-services exists ---
 # The phone-services runit service wraps runsvdir for ~/phone-server/services.
 # This means if that runsvdir ever crashes, the system runit auto-restarts it.

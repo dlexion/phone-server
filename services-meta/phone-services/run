@@ -9,4 +9,6 @@
 #
 # If this runsvdir is OOM-killed or crashes, the system runit restarts it
 # automatically, bringing all phone-server services back within seconds.
+bash /data/data/com.termux/files/home/phone-server/scripts/kill-orphans.sh
+
 exec runsvdir /data/data/com.termux/files/home/phone-server/services

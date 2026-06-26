@@ -7,6 +7,7 @@ This document serves as the absolute source of truth for the home server archite
 - **OS:** Android (Rooted) -> Termux (Linux environment). Root access is available if system-level interventions are required.
 - **Network:** Connected via Type-C Ethernet Hub + Power Delivery. Tailscale is used as an Exit Node (100.X.Y.Z).
 - **Power Management:** Android battery restrictions disabled. `termux-wake-lock` is strictly active to prevent Doze mode and CPU sleep.
+- **Memory Management:** To prevent Android's OOM killer from terminating background services, a 4GB physical swapfile (`/data/data/com.termux/files/home/server-data/swapfile`) is permanently activated on the external SSD during boot via `boot-init.sh`.
 - **Process Management:** `runit` daemon is the sole process manager. All services run via individual `run` scripts.
 
 ## 2. Architectural Constraints (The "Strict NO" List)
@@ -58,8 +59,9 @@ termux:boot → scripts/boot-init.sh → exec runsvdir $PREFIX/var/service
 ```
 
 - **`$PREFIX/var/service/phone-services`** is a symlink to `services-meta/phone-services`. It must be created on fresh setup: `ln -sf ~/phone-server/services-meta/phone-services $PREFIX/var/service/phone-services`
-- **Finish scripts:** Every service has a `finish` script (`services/<name>/finish`) that kills any lingering process before the next supervised start. This prevents `bind: address already in use` crash-loops that occur when a service process is adopted by init (PPid=1) after an OOM/runsvdir restart and keeps holding its port. Direct Termux-user services use `pkill -x <binary>`; `su -c` wrapped services (adguard, beszel-agent, caddy) use `su -c 'pkill -x <binary>'`.
-- **Recovery:** If services still crash-loop after an OOM event (e.g. before finish scripts existed), run `bash ~/phone-server/scripts/recover-services.sh`. This reactively kills init-adopted orphan processes holding ports.
+- **Orphan Cleanup (Pre-flight):** The `services-meta/phone-services/run` script automatically executes `scripts/kill-orphans.sh` *before* starting the inner `runsvdir`. This proactively kills any init-adopted orphan processes holding ports, completely preventing `bind: address already in use` crash-loops after an OOM event.
+- **Finish scripts:** Every service has a `finish` script (`services/<name>/finish`) that kills any lingering process before the next supervised start. Direct Termux-user services use `pkill -x <binary>`; `su -c` wrapped services (adguard, beszel-agent, caddy) use `su -c 'pkill -x <binary>'`.
+- **Manual Recovery:** If services are completely stuck, `bash ~/phone-server/scripts/recover-services.sh` can be run to invoke the orphan cleanup manually.
 
 ## 7. Development & Coding Guidelines
 - **Language:** ALL code, scripts, comments, and logs MUST be in English.
