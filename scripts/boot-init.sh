@@ -71,6 +71,11 @@ fi
 # shellcheck disable=SC1091
 . /data/data/com.termux/files/usr/etc/profile
 
+# --- Disable Android Phantom Process Killer ---
+echo "[INFO] Disabling Phantom Process Killer..."
+su -c "device_config put activity_manager max_phantom_processes 2147483647" || true
+su -c "settings put global settings_enable_monitor_phantom_procs false" || true
+
 mkdir -p "$LOG_DIR"
 
 # Single runsvdir for $PREFIX/var/service.
